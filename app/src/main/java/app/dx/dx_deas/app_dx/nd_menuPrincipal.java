@@ -1,7 +1,14 @@
 package app.dx.dx_deas.app_dx;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -18,25 +25,50 @@ import android.view.MenuItem;
 public class nd_menuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    AlertDialog alert  ;
+    String nombreOperador;
+    String nombreUsuario;
+    String idUnidad ;
+    String idOperador ;
+    String idUsuario ;
+    String idViaje ;
+
+    @SuppressLint("ServiceCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nd_menu_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("DX Xpress");
+        getSupportActionBar().setTitle("DX XPRESS");
 
-        String nombreOperador = getIntent().getStringExtra("nombreOperador");
-        String nombreUsuario = getIntent().getStringExtra("nombreUsuario");
-        String idUnidad = getIntent().getStringExtra("idUnidad");
-        String idOperador = getIntent().getStringExtra("idOperador");
-        String idUsuario = getIntent().getStringExtra("idUsuario");
-        String idViaje = getIntent().getStringExtra("idViaje");
+
+
+
+        nombreOperador = getIntent().getStringExtra("nombreOperador");
+        nombreUsuario = getIntent().getStringExtra("nombreUsuario");
+        idUnidad = getIntent().getStringExtra("idUnidad");
+        idOperador = getIntent().getStringExtra("idOperador");
+        idUsuario = getIntent().getStringExtra("idUsuario");
+        idViaje = getIntent().getStringExtra("idViaje");
+
+        /*LocationManager locationManager;
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);*/
+
+       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            AlertNoGps();
+        }*/
+
 
         Intent i = new Intent(nd_menuPrincipal.this, GPS_Service.class);
         i.putExtra("idUnidad", idUnidad);
         i.putExtra("idOperador", idOperador);
         startService(i);
+
+        Intent in = new Intent(nd_menuPrincipal.this, notifi_Service.class);
+        in.putExtra("idUnidad", idUnidad);
+        startService(in);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -83,11 +115,11 @@ public class nd_menuPrincipal extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,new viajeFragment()).commit();
         } else if (id == R.id.nav_chat) {
             getSupportFragmentManager().beginTransaction().replace(R.id.contenedor, new chatFragment()).commit();
-        } else if (id == R.id.nav_enviar) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,new enviarFragment()).commit();
-        } else if (id == R.id.nav_cerrar) {
-            Intent i = new Intent(nd_menuPrincipal.this, log.class);
-            startActivity(i);
+        } //else if (id == R.id.nav_enviar) {
+               //getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,new enviarFragment()).commit();
+        //}
+        else if (id == R.id.nav_cerrar) {
+            AlertCerrar();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -97,7 +129,32 @@ public class nd_menuPrincipal extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        stopService(new Intent(this, GPS_Service.class));
+
         super.onDestroy();
     }
+
+    private void AlertCerrar() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(nd_menuPrincipal.this);
+        builder.setMessage("Esta seguro de cerrar sesion ?")
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent i = new Intent(nd_menuPrincipal.this, cerrar.class);
+                        startActivity(i);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alert = builder.create();
+        alert.show();
+    }
+
+
 }

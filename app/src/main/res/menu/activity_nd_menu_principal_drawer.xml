@@ -13,9 +13,30 @@
             android:icon="@drawable/ic_chat"
             android:title="Chat" />
         <item
-            android:id="@+id/nav_enviar"
-            android:icon="@drawable/ic_llegada"
-            android:title="Enviar Datos " />
+            android:id="@+id/v1"
+            android:title=" "
+            android:enabled="false"
+            />
+        <item
+            android:id="@+id/v2"
+            android:title=" "
+            android:enabled="false"
+            />
+        <item
+            android:id="@+id/v3"
+            android:title=" "
+            android:enabled="false"
+            />
+        <item
+            android:id="@+id/v4"
+            android:title=" "
+            android:enabled="false"
+            />
+        <item
+            android:id="@+id/v5"
+            android:title=" "
+            android:enabled="false"
+            />
         <item
             android:id="@+id/nav_cerrar"
             android:icon="@drawable/ic_cerrar"

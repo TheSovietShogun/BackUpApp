@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".app"
@@ -15,21 +17,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".log"
-            android:theme="@style/App_DX">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_DX"
+        />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <service
+            android:name=".notifi_Service"
+            />
 
-        <service android:name=".GPS_Service" />
+        <service
+            android:name=".GPS_Service"
+            />
 
         <activity
-            android:name=".menu"
-            android:theme="@style/App_DX" />
+            android:name=".enviarActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_DX"
+            />
 
         <receiver
             android:name=".BR_Reinicio"
@@ -47,8 +56,31 @@
 
         <activity
             android:name=".nd_menuPrincipal"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_nd_menu_principal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".splash"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".cerrar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/App_DX"
+            />
+
+
     </application>
 
 </manifest>

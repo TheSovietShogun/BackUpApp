@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".enviarActivity">
+
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="92dp"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imagen_select"
+        android:layout_width="148dp"
+        android:layout_height="147dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="336dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/azul_chingon"
+        app:layout_constraintBottom_toTopOf="@+id/btnEnviar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnEnviar"
+        android:layout_width="286dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/azul_chingon"
+        android:text="Enviar"
+        android:textColor="@color/blaco_vergas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/facturatxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Factura"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/sellotxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Sello"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tramoActualtxt"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:text="Tramo Actual"
+        android:textSize="16.2dp"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Tramo Actual" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/azul_chingon"
+        app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/bultostxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Bultos"
+        android:inputType="numberDecimal"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/pesotxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="236dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Peso"
+        android:inputType="numberDecimal"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/porcentajetxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="284dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Porcentaje de Llenado"
+        android:inputType="numberDecimal"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

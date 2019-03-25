@@ -1,5 +1,6 @@
 package app.dx.dx_deas.app_dx;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ String idViaje ;
     String mensaje;
     String mensaje2;
     ListView lista ;
+    List<CTramos> tramos;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,13 +131,59 @@ String idViaje ;
 
                         // Tramos[] Tramos1 = gson.fromJson(reusu2, Tramos[].class);
 
-                        Type tramosListType = new TypeToken<ArrayList<CTramos>>() {
-                        }.getType();
-                        List<CTramos> tramos = new Gson().fromJson(reusu2, tramosListType);
+                        Type tramosListType = new TypeToken<ArrayList<CTramos>>() {}.getType();
 
-                        ArrayAdapter adapter = new tramosAdapter(getActivity(), tramos);
+                        tramos = new Gson().fromJson(reusu2, tramosListType);
+
+
+
+                        ArrayAdapter adapter = new tramosAdapter(getActivity(), tramos );
 
                         lista.setAdapter(adapter);
+
+                        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                //Toast.makeText(getActivity(),tramos[position], Toast.LENGTH_SHORT).show();
+                                String data  = tramos.get(position).getNombre();
+
+                                int secu = Integer.parseInt(tramos.get(position).getSecuencia());
+                                int vali = Integer.parseInt(tramos.get(position).getEstatus());
+                                String fechaEntrada = tramos.get(position).getFechaEntrada();
+
+                                if (vali == 2 ){
+                                    Toast.makeText(getActivity(),"Tramo Terminado", Toast.LENGTH_SHORT).show();
+
+                                }
+                                else if (vali == 1 ){
+                                    //Toast.makeText(getActivity(),"Tramo Abierto", Toast.LENGTH_SHORT).show();
+                                     /*Intent i = new Intent(getActivity(), enviarActivity.class);
+                                     i.putExtra("nombreOperador", data);
+                                     startActivity(i);*/
+                                }
+                                else if (vali == 3 ){
+                                    Toast.makeText(getActivity(),"Tramo Cancelado", Toast.LENGTH_SHORT).show();
+
+
+                                }
+                               else if (secu == 1 ){
+                                    Toast.makeText(getActivity(),"Tramo Terminado", Toast.LENGTH_SHORT).show();
+
+
+                                }
+                                else if (vali == 1 && (fechaEntrada.length() >= 5)){
+                                    //Toast.makeText(getActivity(),"Saliendo", Toast.LENGTH_SHORT).show();
+                                /* Intent i = new Intent(getActivity(), enviarActivity.class);
+                                i.putExtra("nombreOperador", data);
+                                startActivity(i);*/
+
+                                }
+
+
+
+
+                            }
+                        });
 
                         String LeeSin = "La insec papu ";
                     }

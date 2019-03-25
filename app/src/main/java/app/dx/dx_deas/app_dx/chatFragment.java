@@ -93,11 +93,19 @@ public class chatFragment extends Fragment {
             public void onClick(View v) {
 
                 mensaje = etcht.getText().toString();
-                EnviarMensajesWS envia = new EnviarMensajesWS();
-                envia.execute();
 
-                WS_ViajeActual viaje = new WS_ViajeActual();
-                viaje.execute();
+                if (mensaje.length() == 0){
+
+                    Toast.makeText(getActivity(), "Ingrese un Mensaje", Toast.LENGTH_SHORT).show();
+                }else{
+                    EnviarMensajesWS envia = new EnviarMensajesWS();
+                    envia.execute();
+
+                    WS_ViajeActual viaje = new WS_ViajeActual();
+                    viaje.execute();
+                }
+
+
             }
         });
 
@@ -170,17 +178,21 @@ public class chatFragment extends Fragment {
                     String reusu = JsonMen.replace("{\"Chat\":[{", "[{");
                     String reusu2 = reusu.replace("}] }", "}]");
 
-                    Type chatListType = new TypeToken<ArrayList<CChat>>() {
-                    }.getType();
-                    List<CChat> chats = new Gson().fromJson(reusu2, chatListType);
 
-                    ArrayAdapter adapter2 = new chatAdapter(getActivity(), chats);
+                        Type chatListType = new TypeToken<ArrayList<CChat>>() {
+                        }.getType();
+                        List<CChat> chats = new Gson().fromJson(reusu2, chatListType);
 
-                    lista2.setAdapter(adapter2);
+                        ArrayAdapter adapter2 = new chatAdapter(getActivity(), chats);
+
+                        lista2.setAdapter(adapter2);
+
+
+
 
 
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error 404C", Toast.LENGTH_SHORT).show();
+                //.Toast.makeText(getActivity(), "Error 404C", Toast.LENGTH_SHORT).show();
                 System.out.println("ERROR : " + e);
             }
         }
@@ -342,10 +354,12 @@ public class chatFragment extends Fragment {
 
 
             }catch (Exception ex){
-                Toast.makeText(getActivity(), "Error 404VA", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Viaje No Asignado", Toast.LENGTH_SHORT).show();
                 mensaje3 = "ERROR: " +ex.getMessage();
             }
 
+            CargaMensajesWS carga = new CargaMensajesWS();
+            carga.execute();
 
             super.onPostExecute(aVoid);
         }

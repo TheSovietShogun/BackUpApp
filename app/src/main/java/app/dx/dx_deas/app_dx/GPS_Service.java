@@ -3,10 +3,12 @@ package app.dx.dx_deas.app_dx;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,8 +18,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.view.WindowManager;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -50,8 +54,12 @@ public class GPS_Service extends Service {
     String NAMESPACE ;
     String URL ;
 
+
     @Override
-    public void onCreate() { }
+    public void onCreate() {
+
+
+    }
 
     @Nullable
     @Override
@@ -85,8 +93,10 @@ public class GPS_Service extends Service {
                     longitud = lon.toString();
                     Insert tarea = new Insert();
 
-                    System.out.println("IMPRE: VARIABLES ANTES DEL ASYNC" + idUnidad + "---- "+idOperador + "----"+ latitud + "----" + longitud);
+                    //System.out.println("IMPRE: VARIABLES ANTES DEL ASYNC" + idUnidad + "---- "+idOperador + "----"+ latitud + "----" + longitud);
                     tarea.execute();
+
+
                 }
 
                 @Override
@@ -101,13 +111,16 @@ public class GPS_Service extends Service {
 
                 @Override
                 public void onProviderDisabled(String provider) {
+                    System.out.println("NO GPS!!!");
+                    //AlertNoGps();
                    // stopSelf();
                 }
             };
 
-            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, listener);
+
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60 * 3 , 0, listener);
 
 
         }catch (Exception e){
@@ -143,7 +156,7 @@ public class GPS_Service extends Service {
             NAMESPACE = "http://dxxpress.net/wsInspeccion/";
             URL = "http://dxxpress.net/wsInspeccion/interfaceOperadores3.asmx";
             fecha = (String) android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date());
-            String version = "2.2";
+            String version = "2.9";
 
             try {
 
@@ -187,7 +200,7 @@ public class GPS_Service extends Service {
 
     @Override
     public void onDestroy() {
-        //locationManager.removeUpdates(listener);
+        locationManager.removeUpdates(listener);
         super.onDestroy();
     }
 

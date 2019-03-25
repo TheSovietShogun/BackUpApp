@@ -2,11 +2,14 @@ package app.dx.dx_deas.app_dx;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,45 +42,66 @@ public class log extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_log);
+
         usu = (EditText) findViewById(R.id.editTextUser);
         pass = (EditText)findViewById(R.id.editTextPass);
         ingre = (Button)findViewById(R.id.btnIngresar);
 
+
+
+
         runtime_permissions();
 
 
-        ingre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (!isTaskRoot()
+                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+                && getIntent().getAction() != null
+                && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+
+            finish();
+            return;
+        }
 
 
 
-                login = usu.getText().toString();
-                password = pass.getText().toString();
+            ingre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
 
-                //Filtros del login
-                if (login.length()==0 && password.length()==0){
-                    Toast.makeText(log.this, "Campos vacios", Toast.LENGTH_SHORT).show();
+
+                    login = usu.getText().toString();
+                    password = pass.getText().toString();
+
+
+                    //Filtros del login
+                    if (login.length()==0 && password.length()==0){
+                        Toast.makeText(log.this, "Campos vacios", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (login.length()==0 ){
+                        Toast.makeText(log.this, "Debes Ingresar un Usuario", Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if (password.length()==0){
+                        Toast.makeText(log.this, "Debes Ingresar una Contraseña ", Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if (login.length() !=0 && password.length() !=0) {
+                        SegundoPlano tarea = new SegundoPlano();
+                        tarea.execute();
+                    }
+
                 }
-                else if (login.length()==0 ){
-                    Toast.makeText(log.this, "Debes Ingresar un Usuario", Toast.LENGTH_SHORT).show();
-
-                }
-                else if (password.length()==0){
-                    Toast.makeText(log.this, "Debes Ingresar una Contra ", Toast.LENGTH_SHORT).show();
-
-                }
-                else if (login.length() !=0 && password.length() !=0) {
-                    SegundoPlano tarea = new SegundoPlano();
-                    tarea.execute();
-                }
+            });
 
 
+    }
 
-            }
-        });
+    @Override 
+    public void onBackPressed() {
+
     }
 
     private boolean runtime_permissions(){
@@ -94,7 +118,8 @@ public class log extends AppCompatActivity {
         }
 
     }
-    //Se solicita permisos al usuario  y se Inicia el servicio
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -105,7 +130,6 @@ public class log extends AppCompatActivity {
         }
 
     }
-
 
 
 
@@ -129,6 +153,12 @@ public class log extends AppCompatActivity {
                 if (tran.length() <= 15) {
                     Toast.makeText(log.this, "Cuenta Equivocada", Toast.LENGTH_SHORT).show();
                 } else {
+
+                    SharedPreferences preferences = getSharedPreferences ("credenciales", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("user", login);
+                    editor.putString("pass", password);
+                    editor.commit();
 
                     //Libreria gson se utliza para traducir de json a string y viceversa
                     Gson gson = new Gson();
@@ -202,8 +232,6 @@ public class log extends AppCompatActivity {
             return null;
         }
     }
-
-
 
 
 }

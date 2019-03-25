@@ -11,37 +11,58 @@
 
     <TextView
         android:id="@+id/hora"
-        android:layout_width="99dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="92dp"
+        android:layout_width="79dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="16dp"
-        android:text="Hora"
-        android:textColor="@color/negrotle"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
+        android:text="Hora"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.303"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nombreTramo"
-        android:layout_width="152dp"
-        android:layout_height="43dp"
+        android:layout_width="101dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Nombre"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
-        android:textColor="@color/negrotle"
+        android:text="Nombre"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.655"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/colo"
-        android:layout_width="87dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="4dp"
+        android:layout_width="69dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
-        android:text="Color"
-        android:textColor="@color/negrotle"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
+        android:text="Color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="42dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:src="?android:attr/actionModePasteDrawable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </android.support.constraint.ConstraintLayout>

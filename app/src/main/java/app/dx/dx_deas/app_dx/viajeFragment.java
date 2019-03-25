@@ -9,6 +9,7 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -53,6 +54,7 @@ public class viajeFragment extends Fragment {
     String idViaje;
     final Fragment tramos = new tramosFragment();
     ImageButton refresh ;
+    boolean btn = true;
     //final Fragment viajeActual = new viajeActualFragment();
 
 
@@ -117,21 +119,59 @@ public class viajeFragment extends Fragment {
         direTramotxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        //google.navigation:q=
-                        Uri.parse("google.navigation:q="+latitudDestino+" "+longitudDestino));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            //google.navigation:q=
+                            Uri.parse("google.navigation:q=" + latitudDestino + " " + longitudDestino));
+                    startActivity(intent);
+
+
+
+                }catch (Exception e){
+                    Toast.makeText(getActivity(), "Favor de Instalar Google Maps", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
 
         refresh = (ImageButton) view.findViewById(R.id.iBRrefresh);
 
+        //refresh.setBackgroundColor(Color.RED);
+        refresh.setEnabled(false);
+        //when use press button
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                //disable your button here
+                //refresh.setVisibility(View.INVISIBLE);
+                refresh.setBackgroundColor(Color.BLUE);
+                refresh.setEnabled(true);
+            }
+        }, 5*1000); //your delay time
+
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(viajeFragment.this);
+                ft.attach(viajeFragment.this);
+                ft.commit();
+
+
                 FragmentManager fragManager = getActivity().getSupportFragmentManager();
                 fragManager.beginTransaction().replace(R.id.contenedor,new viajeFragment()).commit();
+
+                /*Fragment currentFragment = getFragmentManager().findFragmentByTag("contenedorViaje");
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.detach(currentFragment);
+                fragmentTransaction.attach(currentFragment);
+                fragmentTransaction.commit();*/
+
+
             }
         });
 
@@ -318,52 +358,58 @@ public class viajeFragment extends Fragment {
                         String eta2 = viaje.getEta();
 
 
+                           try {
+                               SimpleDateFormat format = new SimpleDateFormat("yyyy-M-dd hh:mm");
 
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-M-dd hh:mm");
+                               Date cita = format.parse(ventanaFecha2);
+                               Date llegada = format.parse(eta2);
+                               System.out.println(cita);
+                               System.out.println(llegada);
 
-                        Date cita = format.parse(ventanaFecha2);
-                        Date llegada = format.parse(eta2);
-                        System.out.println(cita);
-                        System.out.println(llegada);
+                               long different = cita.getTime() - llegada.getTime();
 
-                        long different = cita.getTime() - llegada.getTime();
+                               System.out.println("cita : " + cita);
+                               System.out.println("llegada : " + llegada);
+                               System.out.println("different : " + different);
 
-                        System.out.println("cita : " + cita);
-                        System.out.println("llegada : "+ llegada );
-                        System.out.println("different : " + different);
+                               long secondsInMilli = 1000;
+                               long minutesInMilli = secondsInMilli * 60;
+                               long hoursInMilli = minutesInMilli * 60;
+                               long daysInMilli = hoursInMilli * 24;
 
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long hoursInMilli = minutesInMilli * 60;
-                        long daysInMilli = hoursInMilli * 24;
+                               long elapsedDays = different / daysInMilli;
+                               different = different % daysInMilli;
 
-                        long elapsedDays = different / daysInMilli;
-                        different = different % daysInMilli;
+                               long elapsedHours = different / hoursInMilli;
+                               different = different % hoursInMilli;
 
-                        long elapsedHours = different / hoursInMilli;
-                        different = different % hoursInMilli;
+                               long elapsedMinutes = different / minutesInMilli;
+                               different = different % minutesInMilli;
 
-                        long elapsedMinutes = different / minutesInMilli;
-                        different = different % minutesInMilli;
+                               long elapsedSeconds = different / secondsInMilli;
 
-                        long elapsedSeconds = different / secondsInMilli;
+                               System.out.printf(
+                                       "%d days, %d hours, %d minutes, %d seconds%n",
+                                       elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
 
-                        System.out.printf(
-                                "%d days, %d hours, %d minutes, %d seconds%n",
-                                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+                               if (elapsedDays <= 0 && elapsedHours <= 0 && elapsedMinutes <= 0) {
+                                   int dias = (int) Math.abs(elapsedDays);
+                                   int horas = (int) Math.abs(elapsedHours);
+                                   int minutos = (int) Math.abs(elapsedMinutes);
+                                   TTarde.setText("TARDE \n" + dias + " Dias/ " + horas + " Horas/ " + minutos + " Minutos");
+                                   TTarde.setBackgroundColor(Color.parseColor("#FF0000"));
+                               }
+                               if (elapsedDays >= 0 && elapsedHours >= 0 && elapsedMinutes >= 0) {
 
-                        if (elapsedDays <= 0 && elapsedHours <= 0 && elapsedMinutes <= 0){
-                            int dias = (int) Math.abs(elapsedDays);
-                            int horas = (int) Math.abs(elapsedHours);
-                            int minutos = (int) Math.abs(elapsedMinutes);
-                            TTarde.setText("TARDE \n" + dias + " Dias/ "+horas + " Horas/ " + minutos+ " Minutos");
-                            TTarde.setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                        if (elapsedDays >= 0 && elapsedHours >= 0 && elapsedMinutes >= 0){
+                                   TTarde.setText("A TIEMPO\n" + elapsedDays + " Dias/ " + elapsedHours + " Horas/ " + elapsedMinutes + " Minutos");
+                                   TTarde.setBackgroundColor(Color.parseColor("#04B404"));
+                               }
 
-                            TTarde.setText("A TIEMPO\n" + elapsedDays + " Dias/ "+elapsedHours + " Horas/ " + elapsedMinutes+ " Minutos");
-                            TTarde.setBackgroundColor(Color.parseColor("#04B404"));
-                        }
+
+                           }catch (Exception e) {
+                               TTarde.setText("SIN VENTANA");
+                               TTarde.setBackgroundColor(Color.parseColor("#FFFF00"));
+                           }
                     }
 
 
@@ -372,7 +418,7 @@ public class viajeFragment extends Fragment {
 
             }catch (Exception ex){
                 mensaje2 = "ERROR: " +ex.getMessage();
-                Toast.makeText(getActivity(), "Error 404 VA", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Sin Viaje", Toast.LENGTH_SHORT).show();
             }
 
 
