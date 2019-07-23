@@ -206,8 +206,9 @@ public class notifi_Service extends Service {
 
            String sp_get_user = preferences.getString("user","");
            String sp_get_pass = preferences.getString("pass","");
+           String sp_get_idemp = preferences.getString("emp","");
 
-           if (sp_get_pass == "" && sp_get_user == ""){
+           if (sp_get_pass == "" && sp_get_user == "" && sp_get_idemp == ""){
                stopSelf();
            }else {
 

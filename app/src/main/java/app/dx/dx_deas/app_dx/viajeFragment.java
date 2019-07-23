@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,17 +39,18 @@ import java.util.Date;
 public class viajeFragment extends Fragment {
 
 
-    private Button btnTramos,btnViaje ,btnprueba;
+    private Button btnTramos,btnViaje ,btnsolcitar;
     private String nombreOperador;
     private String idUnidad;
     private String idUsuario;
     private View v1,v2;
-    private TextView desttxt, foliotxt,loadtxt,rutatxt,cajatxt,unidadtxt,direTramotxt,ventanatxt,estimadotxt;
-    private TextView dest, folio,load,ruta,caja,unidad,ventana,estimado,welcome, TTarde ;
-    String tran ;
+    private TextView desttxt,foliotxt,loadtxt,rutatxt,cajatxt,unidadtxt,direTramotxt,ventanatxt,estimadotxt;
+    private TextView dest,folio,load,ruta,caja,unidad,ventana,estimado,welcome,TTarde ;
+    String tran,tran2 ;
     String responseString = "";
     String direccionTramo;
     SoapPrimitive resultString;
+    SoapPrimitive resultString2;
     String mensaje;
     String mensaje2;
     String latitudDestino ;
@@ -61,6 +65,7 @@ public class viajeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         Intent get = getActivity().getIntent();
@@ -86,6 +91,35 @@ public class viajeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_viaje, container, false);
+
+        try {
+                ConnectivityManager manager =(ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+                if (null != activeNetwork) {
+                if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
+                //we have WIFI
+                    String uwu ;
+                 }
+                } else{
+                //we have no connection :(
+                    Toast.makeText(getActivity(), "Red : ALERTA! No esta conectado a ninguna red", Toast.LENGTH_LONG).show();
+                }
+
+        }catch (Exception e ){
+            String ovo = "ERROR: " +e.getMessage();
+                }
+
+
+        try {
+            if(Settings.Secure.getInt(getActivity().getContentResolver(), Settings.Secure.LOCATION_MODE) == 2)
+            {
+                // do stuff
+                Toast.makeText(getActivity(), "ALERTA! Ubicacion en Modo Ahorro de Bateria !", Toast.LENGTH_LONG).show();
+
+            }
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
 
         welcome = (TextView) view.findViewById(R.id.welcome);
         desttxt = (TextView) view.findViewById(R.id.Destinotxt);
@@ -115,6 +149,21 @@ public class viajeFragment extends Fragment {
 
         TTarde = (TextView) view.findViewById(R.id.tiempoTarde);
 
+        btnsolcitar = (Button) view.findViewById(R.id.btn_solicitar);
+        btnsolcitar.setVisibility(View.INVISIBLE);
+        btnsolcitar.setBackgroundColor(Color.parseColor("#088A08"));
+
+
+        btnsolcitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Solicitar solicitar = new Solicitar();
+               solicitar.execute();
+
+            }
+        });
+
+
 
         direTramotxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,10 +174,8 @@ public class viajeFragment extends Fragment {
                             Uri.parse("google.navigation:q=" + latitudDestino + " " + longitudDestino));
                     startActivity(intent);
 
-
-
                 }catch (Exception e){
-                    Toast.makeText(getActivity(), "Favor de Instalar Google Maps", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getActivity(), "Favor de Instalar Google Maps", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -145,7 +192,7 @@ public class viajeFragment extends Fragment {
             public void run() {
                 //disable your button here
                 //refresh.setVisibility(View.INVISIBLE);
-                refresh.setBackgroundColor(Color.BLUE);
+               // refresh.setBackgroundColor(Color.BLUE);
                 refresh.setEnabled(true);
             }
         }, 5*1000); //your delay time
@@ -153,7 +200,6 @@ public class viajeFragment extends Fragment {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -246,6 +292,10 @@ public class viajeFragment extends Fragment {
     }
 
 
+
+
+
+
     private class SegundoPlano extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -296,6 +346,7 @@ public class viajeFragment extends Fragment {
                     //Si el usuario no existe el servicio regresara el string {"Usuario":[{}] }
                     if (tran.length() <= 15) {
                         Toast.makeText(getActivity(), "Viaje No Asignado", Toast.LENGTH_SHORT).show();
+                        btnsolcitar.setVisibility(View.VISIBLE);
                     } else {
 
                         //Libreria gson se utliza para traducir de json a string y viceversa
@@ -353,6 +404,8 @@ public class viajeFragment extends Fragment {
                         cajatxt.setText(nombreRemolquePrincipal);
                         unidadtxt.setText(nombreUnidad);
                         welcome.setText("Bienvenido \n" + nombreOperador);
+
+                        loadtxt.setVisibility(View.INVISIBLE);
 
                         String ventanaFecha2 = viaje.getFechaVentana();
                         String eta2 = viaje.getEta();
@@ -418,7 +471,8 @@ public class viajeFragment extends Fragment {
 
             }catch (Exception ex){
                 mensaje2 = "ERROR: " +ex.getMessage();
-                Toast.makeText(getActivity(), "Sin Viaje", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
+
             }
 
 
@@ -427,6 +481,59 @@ public class viajeFragment extends Fragment {
     }
 
 
+    private class Solicitar extends AsyncTask<Void, Void, Void> {
 
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String SOAP_ACTION = "http://release.dxxpress.net/wsInspeccion/Version_20171221_1212";
+            String METHOD_NAME = "SolicitarViaje";
+            String NAMESPACE  = "http://release.dxxpress.net/wsInspeccion/";
+            String URL = "http://release.dxxpress.net/wsInspeccion/interfaceOperadores3.asmx";
+
+
+            try{
+
+                SoapObject Request = new SoapObject(NAMESPACE,METHOD_NAME);
+                Request.addProperty("idUnidad", idUnidad);
+
+                SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+                soapEnvelope.dotNet = true;
+                soapEnvelope.setOutputSoapObject(Request);
+
+                HttpTransportSE transport= new HttpTransportSE(URL);
+                transport.call(SOAP_ACTION, soapEnvelope);
+
+
+                resultString2 = (SoapPrimitive) soapEnvelope.getResponse();
+
+                mensaje2= "OK";
+
+            }catch (Exception ex){
+
+                mensaje2 = "ERROR: " +ex.getMessage();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+
+            try {
+
+                if (mensaje2!="OK"){
+                    Toast.makeText(getActivity(), "Sin Red", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getActivity(), "Solicitud Enviada", Toast.LENGTH_SHORT).show();
+
+                }
+            }catch (Exception e){
+                String ovo = "ERROR: " +e.getMessage();
+            }
+
+            super.onPostExecute(aVoid);
+        }
+    }
 
 }

@@ -7,32 +7,152 @@
     tools:context=".enviarActivity">
 
 
+    <TextView
+        android:id="@+id/tramoActualtxt"
+        android:layout_width="268dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:text="Tramo Actual"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Tramo Actual" />
+
+
+    <ImageView
+        android:id="@+id/btncamara"
+        android:layout_width="47dp"
+        android:layout_height="53dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_camara2" />
+
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="200dp"
         android:layout_height="30dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="92dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="80dp"
         android:textSize="16.2dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/facturatxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Factura"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner1" />
+
+    <EditText
+        android:id="@+id/sellotxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Sello"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/facturatxt" />
+
+    <EditText
+        android:id="@+id/bultostxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Bultos"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sellotxt" />
+
+    <EditText
+        android:id="@+id/pesotxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Peso"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bultostxt" />
+
+    <EditText
+        android:id="@+id/porcentajetxt"
+        android:layout_width="200dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:hint="Porcentaje de Llenado"
+        android:inputType="textPersonName"
+        android:textSize="16.2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pesotxt" />
+
+    <ImageView
+        android:id="@+id/imagen_select2"
+        android:layout_width="148dp"
+        android:layout_height="147dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/azul_chingon"
+        app:layout_constraintBottom_toTopOf="@+id/btnEnviar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagen_select"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imagen_select"
         android:layout_width="148dp"
         android:layout_height="147dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="336dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
         android:background="@color/azul_chingon"
         app:layout_constraintBottom_toTopOf="@+id/btnEnviar"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imagen_select2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnEnviar"
@@ -48,56 +168,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/facturatxt"
-        android:layout_width="200dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="80dp"
-        android:ems="10"
-        android:hint="Factura"
-        android:inputType="textPersonName"
-        android:textSize="16.2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/sellotxt"
-        android:layout_width="200dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="144dp"
-        android:layout_marginEnd="80dp"
-        android:ems="10"
-        android:hint="Sello"
-        android:inputType="textPersonName"
-        android:textSize="16.2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tramoActualtxt"
-        android:layout_width="wrap_content"
-        android:layout_height="17dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="80dp"
-        android:text="Tramo Actual"
-        android:textSize="16.2dp"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Tramo Actual" />
-
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="2dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="52dp"
         android:layout_marginBottom="24dp"
         android:background="@color/azul_chingon"
         app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
@@ -106,50 +181,89 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/bultostxt"
-        android:layout_width="200dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="192dp"
-        android:layout_marginEnd="80dp"
-        android:ems="10"
-        android:hint="Bultos"
-        android:inputType="numberDecimal"
-        android:textSize="16.2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/txtima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adjuntar \n Imagen"
+        android:textColor="@color/blaco_vergas"
+        app:layout_constraintBottom_toBottomOf="@+id/imagen_select"
+        app:layout_constraintEnd_toEndOf="@+id/imagen_select"
+        app:layout_constraintStart_toStartOf="@+id/imagen_select"
+        app:layout_constraintTop_toTopOf="@+id/imagen_select" />
 
-    <EditText
-        android:id="@+id/pesotxt"
-        android:layout_width="200dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="236dp"
-        android:layout_marginEnd="80dp"
-        android:ems="10"
-        android:hint="Peso"
-        android:inputType="numberDecimal"
-        android:textSize="16.2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/txtima2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adjuntar \n Imagen"
+        android:textColor="@color/blaco_vergas"
+        app:layout_constraintBottom_toBottomOf="@+id/imagen_select2"
+        app:layout_constraintEnd_toEndOf="@+id/imagen_select2"
+        app:layout_constraintStart_toStartOf="@+id/imagen_select2"
+        app:layout_constraintTop_toTopOf="@+id/imagen_select2" />
 
-    <EditText
-        android:id="@+id/porcentajetxt"
-        android:layout_width="200dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="284dp"
-        android:layout_marginEnd="80dp"
-        android:ems="10"
-        android:hint="Porcentaje de Llenado"
-        android:inputType="numberDecimal"
-        android:textSize="16.2dp"
+    <FrameLayout
+        android:layout_width="372dp"
+        android:layout_height="522dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/enviar_carga_contenedor"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progressBar4"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="162dp"
+                android:layout_marginTop="205dp"
+                android:layout_marginEnd="162dp"
+                android:layout_marginBottom="269dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="156dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="158dp"
+                android:layout_marginBottom="250dp"
+                android:text="Enviando"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/progressBar4" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="159dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="157dp"
+                android:layout_marginBottom="219dp"
+                android:text="Esto podria tardar algunos minutos"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 
 
 </android.support.constraint.ConstraintLayout>

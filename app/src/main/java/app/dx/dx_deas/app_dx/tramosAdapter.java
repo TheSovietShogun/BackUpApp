@@ -72,6 +72,7 @@ public class tramosAdapter extends ArrayAdapter<CTramos> {
         if (secu == 1 ){
             colo.setBackgroundColor(Color.parseColor("#074EAB"));
             colo.setText("Terminado");
+            logo.setVisibility(View.INVISIBLE);
 
         }
         if (vali == 1 && (fechaEntrada.length() >= 5)){

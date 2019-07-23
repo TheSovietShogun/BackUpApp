@@ -1,17 +1,22 @@
 package app.dx.dx_deas.app_dx;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +26,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class nd_menuPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,18 +40,36 @@ public class nd_menuPrincipal extends AppCompatActivity
     String idOperador ;
     String idUsuario ;
     String idViaje ;
+    Context context;
+    String deviceUniqueIdentifier;
+    String imei;
+    String emp ;
+    int PERMISSION_ALL = 1;
+    String[] PERMISSIONS = {
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA
+    };
 
-    @SuppressLint("ServiceCast")
+
+    @SuppressLint({"ServiceCast", "MissingPermission"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_nd_menu_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("DX XPRESS");
 
-
-
+        try {
+            deviceUniqueIdentifier = null;
+            TelephonyManager tm = (TelephonyManager) nd_menuPrincipal.this.getSystemService(Context.TELEPHONY_SERVICE);
+             imei = tm.getDeviceId();
+        }catch (Exception e ){
+             imei = "";
+            }
 
         nombreOperador = getIntent().getStringExtra("nombreOperador");
         nombreUsuario = getIntent().getStringExtra("nombreUsuario");
@@ -52,23 +77,50 @@ public class nd_menuPrincipal extends AppCompatActivity
         idOperador = getIntent().getStringExtra("idOperador");
         idUsuario = getIntent().getStringExtra("idUsuario");
         idViaje = getIntent().getStringExtra("idViaje");
-
-        /*LocationManager locationManager;
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);*/
-
-       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            AlertNoGps();
-        }*/
+        emp =  getIntent().getStringExtra("emp");
 
 
-        Intent i = new Intent(nd_menuPrincipal.this, GPS_Service.class);
-        i.putExtra("idUnidad", idUnidad);
-        i.putExtra("idOperador", idOperador);
-        startService(i);
+        NavigationView naviView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  naviView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.nombre);
 
-        Intent in = new Intent(nd_menuPrincipal.this, notifi_Service.class);
-        in.putExtra("idUnidad", idUnidad);
-        startService(in);
+        try {
+            nav_user.setText("DX XPRESS\n"+ nombreOperador +"\n"+"N°"+emp);
+        }catch (Exception e ){
+            nav_user.setText("DX XPRESS\n\n"+"N°"+emp);
+
+        }
+
+
+        if ( isMyServiceRunning(notifi_Service.class)){
+            //Toast.makeText(nd_menuPrincipal.this, "Servicio Existente", Toast.LENGTH_LONG).show();
+                String notiSer ;
+        }else {
+            //Toast.makeText(nd_menuPrincipal.this, "Servicio Reiniciado", Toast.LENGTH_LONG).show();
+
+            Intent in = new Intent(nd_menuPrincipal.this, notifi_Service.class);
+            in.putExtra("idUnidad", idUnidad);
+            startService(in);
+        }
+
+
+
+
+       if ( isMyServiceRunning(GPS_ServiceV2.class)){
+            Toast.makeText(nd_menuPrincipal.this, "Servicio Existente", Toast.LENGTH_LONG).show();
+            String GPS_Ser ;
+        }else {
+            Toast.makeText(nd_menuPrincipal.this, "Servicio Reiniciado", Toast.LENGTH_LONG).show();
+
+            Intent i = new Intent(nd_menuPrincipal.this, GPS_ServiceV2.class);
+            i.putExtra("idUnidad", idUnidad);
+            i.putExtra("idOperador", idOperador);
+           // i.putExtra("imei", imei);
+            //i.putExtra("emp", emp);
+            startService(i);
+        }
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,6 +138,18 @@ public class nd_menuPrincipal extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onStart() {
+
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+
+        statusCheck();
+
+        super.onStart();
     }
 
     @Override
@@ -115,10 +179,7 @@ public class nd_menuPrincipal extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,new viajeFragment()).commit();
         } else if (id == R.id.nav_chat) {
             getSupportFragmentManager().beginTransaction().replace(R.id.contenedor, new chatFragment()).commit();
-        } //else if (id == R.id.nav_enviar) {
-               //getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,new enviarFragment()).commit();
-        //}
-        else if (id == R.id.nav_cerrar) {
+        } else if (id == R.id.nav_cerrar) {
             AlertCerrar();
         }
 
@@ -157,4 +218,53 @@ public class nd_menuPrincipal extends AppCompatActivity
     }
 
 
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void statusCheck() {
+         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Su ubicacion esta apagada . Desea encenderla ?")
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

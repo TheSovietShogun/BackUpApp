@@ -1,10 +1,16 @@
 package app.dx.dx_deas.app_dx;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +29,14 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class tramosFragment extends Fragment {
 
-String idViaje ;
+    String idViaje ;
     String tran ;
     String responseString = "";
     String direccionTramo;
@@ -38,6 +45,15 @@ String idViaje ;
     String mensaje2;
     ListView lista ;
     List<CTramos> tramos;
+    String data ;
+    int secu ;
+    int secuT;
+    int vali ;
+    int secuG;
+    int estatus;
+    String fechaEntrada ;
+    String nombre ;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,14 +84,15 @@ String idViaje ;
         return view;
     }
 
+
     private class LlamadaTramosWS extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String SOAP_ACTION = "http://dxxpress.net/wsInspeccion/Version_20171221_1212";
+            String SOAP_ACTION = "http://release.dxxpress.net/wsInspeccion/Version_20171221_1212";
             String METHOD_NAME = "Tramos";
-            String NAMESPACE  = "http://dxxpress.net/wsInspeccion/";
-            String URL = "http://dxxpress.net/wsInspeccion/interfaceOperadores3.asmx";
+            String NAMESPACE  = "http://release.dxxpress.net/wsInspeccion/";
+            String URL = "http://release.dxxpress.net/wsInspeccion/interfaceOperadores3.asmx";
 
 
 
@@ -135,7 +152,17 @@ String idViaje ;
 
                         tramos = new Gson().fromJson(reusu2, tramosListType);
 
+                        for (int i=0;i<tramos.size();i++){
 
+                            secu = Integer.parseInt(tramos.get(i).getSecuencia());
+                            estatus = Integer.parseInt(tramos.get(i).getEstatus());
+
+                            if (secu > secuG && estatus != 3){
+
+                                secuG = secu ;
+
+                            }
+                        }
 
                         ArrayAdapter adapter = new tramosAdapter(getActivity(), tramos );
 
@@ -145,37 +172,50 @@ String idViaje ;
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 //Toast.makeText(getActivity(),tramos[position], Toast.LENGTH_SHORT).show();
-                                String data  = tramos.get(position).getNombre();
 
-                                int secu = Integer.parseInt(tramos.get(position).getSecuencia());
-                                int vali = Integer.parseInt(tramos.get(position).getEstatus());
-                                String fechaEntrada = tramos.get(position).getFechaEntrada();
+                                 data  = tramos.get(position).getIdDetalleViaje();
+                                 secuT = Integer.parseInt(tramos.get(position).getSecuencia());
+                                 vali = Integer.parseInt(tramos.get(position).getEstatus());
+                                 fechaEntrada = tramos.get(position).getFechaEntrada();
+                                nombre = tramos.get(position).getNombre();
 
-                                if (vali == 2 ){
+                                //Toast.makeText(getActivity(), "Tramo Data -\nSecuencia " + secuT + "\nEstatus " + vali +"\nNombre " + nombre, Toast.LENGTH_LONG).show();
+
+                                if (secuT == 1 ) {
+                                    Toast.makeText(getActivity(), "Tramo Terminado", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (vali == 2 ){
                                     Toast.makeText(getActivity(),"Tramo Terminado", Toast.LENGTH_SHORT).show();
 
                                 }
                                 else if (vali == 1 ){
-                                    //Toast.makeText(getActivity(),"Tramo Abierto", Toast.LENGTH_SHORT).show();
-                                     /*Intent i = new Intent(getActivity(), enviarActivity.class);
-                                     i.putExtra("nombreOperador", data);
-                                     startActivity(i);*/
+                                   //Toast.makeText(getActivity(),"Detalle Viaje" + data + "\nid viaje"+ idViaje, Toast.LENGTH_SHORT).show();
+
+                                    //lista.getChildAt(position).setEnabled(false);
+                                    Intent i = new Intent(getActivity(), enviarActivity.class);
+                                    i.putExtra("idDetalleViaje", data);
+                                    i.putExtra("idViaje", idViaje);
+                                    i.putExtra("nombre", nombre);
+                                    i.putExtra("secu", secuT);
+                                    i.putExtra("secuG", secuG);
+                                    startActivity(i);
+
                                 }
                                 else if (vali == 3 ){
                                     Toast.makeText(getActivity(),"Tramo Cancelado", Toast.LENGTH_SHORT).show();
 
 
                                 }
-                               else if (secu == 1 ){
-                                    Toast.makeText(getActivity(),"Tramo Terminado", Toast.LENGTH_SHORT).show();
-
-
-                                }
                                 else if (vali == 1 && (fechaEntrada.length() >= 5)){
-                                    //Toast.makeText(getActivity(),"Saliendo", Toast.LENGTH_SHORT).show();
-                                /* Intent i = new Intent(getActivity(), enviarActivity.class);
-                                i.putExtra("nombreOperador", data);
-                                startActivity(i);*/
+                                    //lista.getChildAt(position).setEnabled(false);
+                                  // Toast.makeText(getActivity(),"Detalle Viaje" + data + "\nid viaje"+ idViaje, Toast.LENGTH_SHORT).show();
+                                   Intent i = new Intent(getActivity(), enviarActivity.class);
+                                    i.putExtra("idDetalleViaje", data);
+                                    i.putExtra("idViaje", idViaje);
+                                    i.putExtra("nombre", nombre);
+                                    i.putExtra("secu", secuT);
+                                    i.putExtra("secuG", secuG);
+                                    startActivity(i);
 
                                 }
 

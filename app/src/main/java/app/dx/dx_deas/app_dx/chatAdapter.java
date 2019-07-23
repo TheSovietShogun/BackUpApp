@@ -36,10 +36,10 @@ public class chatAdapter extends ArrayAdapter<CChat> {
             mholder = new ViewHolder();
 
             String str1 = currentMen.getUsuario();
-            String str2 = "d-";
-            String str3 = "mk";
+            String str2 = "-";
 
-        if (str1.toLowerCase().contains(str2.toLowerCase()) ||  str1.toLowerCase().contains(str3.toLowerCase())){
+
+        if (str1.toLowerCase().contains(str2.toLowerCase()) ){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_message_sent, parent, false);
 
             mholder.mensaje1 = (TextView) convertView.findViewById(R.id.mensajeEnviadoTxt);
@@ -74,10 +74,10 @@ public class chatAdapter extends ArrayAdapter<CChat> {
             mholder = new ViewHolder();
 
             String str1 = currentMen.getUsuario();
-            String str2 = "d-";
-            String str3 = "mk";
+            String str2 = "-";
 
-            if (str1.toLowerCase().contains(str2.toLowerCase()) ||  str1.toLowerCase().contains(str3.toLowerCase())){
+
+            if (str1.toLowerCase().contains(str2.toLowerCase()) ){
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_message_sent, parent, false);
 
                 mholder.mensaje1 = (TextView) convertView.findViewById(R.id.mensajeEnviadoTxt);

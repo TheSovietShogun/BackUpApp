@@ -9,14 +9,16 @@ public class CTramos {
     private String secuencia ;
     private String fechaEntrada ;
     private String fechaSalida ;
+    private String idDetalleViaje ;
 
-    public CTramos(String nombre, String horaCompromiso, String estatus, String secuencia, String fechaEntrada, String fechaSalida) {
+    public CTramos(String nombre, String horaCompromiso, String estatus, String secuencia, String fechaEntrada, String fechaSalida,String idDetalleViaje) {
         this.nombre = nombre;
         this.horaCompromiso = horaCompromiso;
         this.estatus = estatus;
         this.secuencia = secuencia;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
+        this.idDetalleViaje = idDetalleViaje;
     }
 
     public String getNombre() {
@@ -41,6 +43,10 @@ public class CTramos {
 
     public String getFechaSalida() {
         return fechaSalida;
+    }
+
+    public String getIdDetalleViaje() {
+        return idDetalleViaje;
     }
 
     @Override

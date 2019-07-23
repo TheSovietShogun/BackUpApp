@@ -6,7 +6,7 @@ android {
         applicationId "app.dx.dx_deas.app_dx"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 11
+        versionCode 13
         versionName "2.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

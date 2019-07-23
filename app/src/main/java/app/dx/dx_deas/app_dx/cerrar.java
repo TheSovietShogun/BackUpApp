@@ -132,6 +132,7 @@ public class cerrar extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("user", "");
                         editor.putString("pass", "");
+                        editor.putString("emp", "");
                         editor.commit();
 
 

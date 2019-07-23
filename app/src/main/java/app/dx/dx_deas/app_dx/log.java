@@ -2,6 +2,8 @@ package app.dx.dx_deas.app_dx;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,9 +13,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,13 +35,25 @@ import org.ksoap2.transport.HttpTransportSE;
 
 public class log extends AppCompatActivity {
 
-    private EditText usu, pass;
+    private EditText usu, pass,numemp;
     private Button ingre;
     String login;
     String password;
     String mensaje;
+    String idempleado;
     String tran;
     SoapPrimitive resultString;
+
+
+    String deviceIMEI;
+    int PERMISSION_ALL = 1;
+    String[] PERMISSIONS = {
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +64,11 @@ public class log extends AppCompatActivity {
         usu = (EditText) findViewById(R.id.editTextUser);
         pass = (EditText)findViewById(R.id.editTextPass);
         ingre = (Button)findViewById(R.id.btnIngresar);
+        numemp = (EditText)findViewById(R.id.editTextNumEmp);
 
 
 
 
-        runtime_permissions();
 
 
         if (!isTaskRoot()
@@ -71,13 +87,13 @@ public class log extends AppCompatActivity {
                 public void onClick(View v) {
 
 
-
+                    idempleado = numemp.getText().toString();
                     login = usu.getText().toString();
                     password = pass.getText().toString();
 
 
                     //Filtros del login
-                    if (login.length()==0 && password.length()==0){
+                    if (login.length()==0 && password.length()==0 && idempleado.length() == 0){
                         Toast.makeText(log.this, "Campos vacios", Toast.LENGTH_SHORT).show();
                     }
                     else if (login.length()==0 ){
@@ -88,7 +104,11 @@ public class log extends AppCompatActivity {
                         Toast.makeText(log.this, "Debes Ingresar una Contraseña ", Toast.LENGTH_SHORT).show();
 
                     }
-                    else if (login.length() !=0 && password.length() !=0) {
+                    else if (idempleado.length() == 0){
+                        Toast.makeText(log.this, "Debes su Numero de Empleado ", Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if (login.length() !=0 && password.length() !=0 && idempleado.length() != 0) {
                         SegundoPlano tarea = new SegundoPlano();
                         tarea.execute();
                     }
@@ -99,40 +119,71 @@ public class log extends AppCompatActivity {
 
     }
 
-    @Override 
+    @Override
+    protected void onStart() {
+
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+
+        super.onStart();
+    }
+
+    ///////////////////////////////////////////////////////////////
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+
+        public void doSomthing() {
+            deviceIMEI = getDeviceIMEI(log.this);
+
+            //andGoToYourNextStep
+        }
+
+        @SuppressLint("HardwareIds")
+        public static String getDeviceIMEI(Activity activity) {
+
+            String deviceUniqueIdentifier = null;
+            TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+            if (null != tm) {
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+                else
+                    deviceUniqueIdentifier = tm.getDeviceId();
+                if (null == deviceUniqueIdentifier || 0 == deviceUniqueIdentifier.length())
+                    deviceUniqueIdentifier = "0";
+            }
+            return deviceUniqueIdentifier;
+    }
+
+    ///////////////////////////////////////////////////
+
+    @Override
     public void onBackPressed() {
 
     }
 
-    private boolean runtime_permissions(){
-        if (Build.VERSION.SDK_INT>=23 &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                &&
-                ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-
-        { requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},100);
-
-            return true;
-        }else {
-            return false;
-        }
-
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode== 100){
-            if (grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager
-                    .PERMISSION_GRANTED) {
-            }
-        }
-
-    }
+    /////////////////////////////////////
 
 
 
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////
 
     private class SegundoPlano extends AsyncTask<Void, Void, Void> {
         @Override
@@ -158,6 +209,7 @@ public class log extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("user", login);
                     editor.putString("pass", password);
+                    editor.putString("emp", idempleado);
                     editor.commit();
 
                     //Libreria gson se utliza para traducir de json a string y viceversa
@@ -188,6 +240,7 @@ public class log extends AppCompatActivity {
                     i.putExtra("idUsuario", idUsuario);
                     i.putExtra("idOperador", idOperador);
                     i.putExtra("idViaje", idViaje);
+                    i.putExtra("emp",idempleado);
                     startActivity(i);
 
                 }
@@ -211,6 +264,7 @@ public class log extends AppCompatActivity {
                 SoapObject Request = new SoapObject(NAMESPACE,METHOD_NAME);
                 Request.addProperty("login", login);
                 Request.addProperty("password", password);
+                Request.addProperty("claveoperador", idempleado);
 
                 SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
                 soapEnvelope.dotNet = true;

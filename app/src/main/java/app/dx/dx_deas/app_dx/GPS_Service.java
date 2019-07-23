@@ -10,18 +10,23 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -53,6 +58,9 @@ public class GPS_Service extends Service {
     String METHOD_NAME ;
     String NAMESPACE ;
     String URL ;
+    String BatteryLevel;
+    String imei;
+    String emp;
 
 
     @Override
@@ -87,13 +95,29 @@ public class GPS_Service extends Service {
             listener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
+
                     lat = location.getLatitude();
                     lon = location.getLongitude();
                     latitud = lat.toString();
                     longitud = lon.toString();
+
+
+                   /* Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(GPS_Service.this.getApplicationContext(),"My Awesome service toast...",Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+
+                    IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+                    Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
+                    BatteryLevel  = String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
+
                     Insert tarea = new Insert();
 
-                    //System.out.println("IMPRE: VARIABLES ANTES DEL ASYNC" + idUnidad + "---- "+idOperador + "----"+ latitud + "----" + longitud);
+                    System.out.println("IMPRE: VARIABLES ANTES DEL ASYNC" + idUnidad + "---- "+idOperador + "----"+ latitud + "----" + longitud);
                     tarea.execute();
 
 
@@ -122,7 +146,7 @@ public class GPS_Service extends Service {
             locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60 * 3 , 0, listener);
 
-
+           // 1000 * 60 * 2
         }catch (Exception e){
             System.out.println("Excepcion en Servicio Location : " + e.getMessage() );
 
@@ -130,11 +154,12 @@ public class GPS_Service extends Service {
 
         idUnidad = (String) intent.getExtras().get("idUnidad");
         idOperador=(String) intent.getExtras().get("idOperador");
-
+        imei = (String) intent.getExtras().get("imei");
+        emp = (String) intent.getExtras().get("emp");
 
         System.out.println("IMPRE : SE TERMINA EL ON START");
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
 
@@ -156,7 +181,7 @@ public class GPS_Service extends Service {
             NAMESPACE = "http://dxxpress.net/wsInspeccion/";
             URL = "http://dxxpress.net/wsInspeccion/interfaceOperadores3.asmx";
             fecha = (String) android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", new Date());
-            String version = "2.9";
+            String version = "3.00";
 
             try {
 
@@ -166,7 +191,11 @@ public class GPS_Service extends Service {
                 Request.addProperty("fecha", fecha);
                 Request.addProperty("idUnidad", idUnidad);
                 Request.addProperty("idOperador", idOperador);
+                Request.addProperty("nivelbateria", BatteryLevel);
+                Request.addProperty("imei", imei);
+                Request.addProperty("claveoperador", emp);
                 Request.addProperty("version", version);
+
 
                 SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
                 soapEnvelope.dotNet = true;
@@ -180,14 +209,14 @@ public class GPS_Service extends Service {
 
                 mensaje = ResultString.toString();
 
-                System.out.println("SE INSERTO A LAS : " + fecha );
+               // System.out.println("SE INSERTO A LAS : " + fecha );
 
 
 
             } catch (Exception ex) {
 
                 mensaje = ex.getMessage();
-                System.out.println("Excepcion en Servicio SOAP : " + mensaje );
+                System.out.println("Excepcion en Servicio SOAP GPS: " + mensaje );
             }
 
             return null;
@@ -195,7 +224,9 @@ public class GPS_Service extends Service {
 
 
         @Override
-        protected void onPostExecute(Void aVoid) { super.onPostExecute(aVoid); }
+        protected void onPostExecute(Void aVoid) { super.onPostExecute(aVoid);
+            System.out.println("RESPUESTA DEL SERVER: " + mensaje);
+        }
     }
 
     @Override

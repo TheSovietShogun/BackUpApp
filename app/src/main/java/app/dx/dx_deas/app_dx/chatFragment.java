@@ -2,6 +2,8 @@ package app.dx.dx_deas.app_dx;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -72,8 +74,22 @@ public class chatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        WS_ViajeActual viaje = new WS_ViajeActual();
-        viaje.execute();
+
+        try {
+            ConnectivityManager manager =(ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+            if (null != activeNetwork) {
+                if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
+                    WS_ViajeActual viaje = new WS_ViajeActual();
+                    viaje.execute();
+                }
+            } else{
+                Toast.makeText(getActivity(), "Red : ALERTA! No esta conectado a ninguna red", Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e ){
+            Toast.makeText(getActivity(), "Error 500EA", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
@@ -98,11 +114,25 @@ public class chatFragment extends Fragment {
 
                     Toast.makeText(getActivity(), "Ingrese un Mensaje", Toast.LENGTH_SHORT).show();
                 }else{
-                    EnviarMensajesWS envia = new EnviarMensajesWS();
-                    envia.execute();
+                    try {
+                        ConnectivityManager manager =(ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+                        if (null != activeNetwork) {
+                            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
 
-                    WS_ViajeActual viaje = new WS_ViajeActual();
-                    viaje.execute();
+                                EnviarMensajesWS envia = new EnviarMensajesWS();
+                                envia.execute();
+
+                                WS_ViajeActual viaje = new WS_ViajeActual();
+                                viaje.execute();
+                            }
+                        } else{
+                            Toast.makeText(getActivity(), "Red : ALERTA! No esta conectado a ninguna red", Toast.LENGTH_LONG).show();
+                        }
+                    }catch (Exception e ){
+                        Toast.makeText(getActivity(), "Error 500EA", Toast.LENGTH_LONG).show();
+                    }
+
                 }
 
 
